@@ -1,0 +1,34 @@
+@page "/attendance/{EventId:int}"
+@using EventEase.Models
+@using EventEase.Services
+@using EventEase.Components
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Attendance</PageTitle>
+
+<div class="attendance-container">
+    <button class="btn-back" @onclick="GoBack">← Back</button>
+
+    @if (_event != null)
+    {
+        <AttendanceTracker EventId="@EventId" EventName="@_event.Name" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? _event;
+
+    protected override void OnParametersSet()
+    {
+        _event = EventService.GetEventById(EventId);
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/event/{EventId}");
+    }
+}

@@ -1,0 +1,25 @@
+.register-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.full-event-message {
+    text-align: center;
+    padding: 64px 32px;
+    background: white;
+    border-radius: 12px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #0066cc;
+    color: white;
+}

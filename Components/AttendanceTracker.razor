@@ -1,0 +1,74 @@
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService EventService
+
+<div class="attendance-tracker">
+    <h3>@EventName - Attendance</h3>
+
+    <div class="search-filter">
+        <input type="text" 
+               class="search-input" 
+               placeholder="Search..." 
+               @bind="@_searchQuery"
+               @bind:event="oninput" />
+    </div>
+
+    @if (FilteredRegistrations.Any())
+    {
+        <div class="attendance-list">
+            @foreach (var registration in FilteredRegistrations)
+            {
+                <div class="attendance-item">
+                    <div class="attendee-info">
+                        <div class="attendee-name">@registration.FullName</div>
+                        <div>@registration.Email</div>
+                    </div>
+
+                    <div class="attendance-action">
+                        <input type="checkbox" 
+                               checked="@registration.IsAttended"
+                               @onchange="@(e => ToggleAttendance(registration.Id, (bool)e.Value!))" />
+                        <span>@(registration.IsAttended ? "Present" : "Absent")</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    [Parameter]
+    public string EventName { get; set; } = string.Empty;
+
+    private List<Registration> Registrations { get; set; } = new();
+    private string _searchQuery = string.Empty;
+
+    private List<Registration> FilteredRegistrations
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(_searchQuery))
+                return Registrations;
+
+            var query = _searchQuery.ToLower();
+            return Registrations.Where(r => 
+                r.FullName.ToLower().Contains(query) || 
+                r.Email.ToLower().Contains(query)
+            ).ToList();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        Registrations = EventService.GetEventRegistrations(EventId);
+    }
+
+    private void ToggleAttendance(int registrationId, bool isAttended)
+    {
+        EventService.MarkAttendance(EventId, registrationId, isAttended);
+        Registrations = EventService.GetEventRegistrations(EventId);
+    }
+}

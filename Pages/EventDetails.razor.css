@@ -1,0 +1,43 @@
+.event-details-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.btn-back {
+    background: transparent;
+    border: none;
+    color: #0066cc;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.event-info {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.action-section {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #0066cc;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}

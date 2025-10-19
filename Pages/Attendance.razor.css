@@ -1,0 +1,13 @@
+.attendance-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.btn-back {
+    background: transparent;
+    border: none;
+    color: #0066cc;
+    cursor: pointer;
+    margin-bottom: 24px;
+}

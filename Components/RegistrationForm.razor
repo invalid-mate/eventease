@@ -1,0 +1,90 @@
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<div class="registration-form">
+    <h2>Register for @EventName</h2>
+
+    <EditForm Model="@_registration" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="fullname">Full Name *</label>
+            <InputText id="fullname" class="form-control" @bind-Value="_registration.FullName" />
+            <ValidationMessage For="@(() => _registration.FullName)" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <InputText id="email" type="email" class="form-control" @bind-Value="_registration.Email" />
+            <ValidationMessage For="@(() => _registration.Email)" />
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <InputText id="phone" class="form-control" @bind-Value="_registration.Phone" />
+            <ValidationMessage For="@(() => _registration.Phone)" />
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age *</label>
+            <InputNumber id="age" class="form-control" @bind-Value="_registration.Age" />
+            <ValidationMessage For="@(() => _registration.Age)" />
+        </div>
+
+        @if (_isSuccess)
+        {
+            <div class="alert alert-success">
+                ✓ Registration successful!
+            </div>
+        }
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" disabled="@_isSubmitting">
+                Complete Registration
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">
+                Cancel
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    [Parameter]
+    public string EventName { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnRegistrationComplete { get; set; }
+
+    private Registration _registration = new();
+    private bool _isSubmitting = false;
+    private bool _isSuccess = false;
+
+    private async Task HandleValidSubmit()
+    {
+        _isSubmitting = true;
+        await Task.Delay(500);
+
+        var success = EventService.RegisterForEvent(EventId, _registration);
+
+        if (success)
+        {
+            _isSuccess = true;
+            await Task.Delay(1500);
+            await OnRegistrationComplete.InvokeAsync();
+        }
+
+        _isSubmitting = false;
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/event/{EventId}");
+    }
+}

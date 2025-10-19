@@ -1,0 +1,77 @@
+@using EventEase.Models
+
+<div class="event-card">
+    <div class="event-header">
+        <h3>@Event.Name</h3>
+        @if (Event.IsFull)
+        {
+            <span class="badge badge-danger">FULL</span>
+        }
+    </div>
+
+    <div class="event-details">
+        <div class="detail-item">
+            <span class="icon">📅</span>
+            <span>@Event.Date.ToString("MMM dd, yyyy - hh:mm tt")</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="icon">📍</span>
+            <span>@Event.Location</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="icon">👥</span>
+            <span>@Event.RegisteredCount / @Event.Capacity attendees</span>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Event.Description))
+    {
+        <p class="event-description">@Event.Description</p>
+    }
+
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: @GetCapacityPercentage()%"></div>
+    </div>
+
+    <div class="event-actions">
+        <button class="btn btn-primary" @onclick="HandleViewDetails">
+            View Details
+        </button>
+
+        @if (!Event.IsFull && OnRegisterClicked.HasDelegate)
+        {
+            <button class="btn btn-success" @onclick="HandleRegister">
+                Register Now
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Event Event { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<int> OnViewDetails { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRegisterClicked { get; set; }
+
+    private async Task HandleViewDetails()
+    {
+        await OnViewDetails.InvokeAsync(Event.Id);
+    }
+
+    private async Task HandleRegister()
+    {
+        await OnRegisterClicked.InvokeAsync(Event.Id);
+    }
+
+    private double GetCapacityPercentage()
+    {
+        if (Event.Capacity == 0) return 0;
+        return ((double)Event.RegisteredCount / Event.Capacity) * 100;
+    }
+}

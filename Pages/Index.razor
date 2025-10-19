@@ -1,0 +1,50 @@
+@page "/"
+@using EventEase.Models
+@using EventEase.Services
+@using EventEase.Components
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>EventEase - Home</PageTitle>
+
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Welcome to EventEase</h1>
+        <p>Discover and register for amazing events</p>
+    </div>
+
+    <div class="events-section">
+        <h2>Upcoming Events</h2>
+
+        @if (_events.Any())
+        {
+            <div class="events-grid">
+                @foreach (var eventItem in _events)
+                {
+                    <EventCard Event="@eventItem" 
+                              OnViewDetails="@ViewEventDetails"
+                              OnRegisterClicked="@NavigateToRegistration" />
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Event> _events = new();
+
+    protected override void OnInitialized()
+    {
+        _events = EventService.GetAllEvents();
+    }
+
+    private void ViewEventDetails(int eventId)
+    {
+        Navigation.NavigateTo($"/event/{eventId}");
+    }
+
+    private void NavigateToRegistration(int eventId)
+    {
+        Navigation.NavigateTo($"/register/{eventId}");
+    }
+}

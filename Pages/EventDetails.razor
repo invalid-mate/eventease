@@ -1,0 +1,63 @@
+@page "/event/{EventId:int}"
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>@(_event?.Name ?? "Event Details")</PageTitle>
+
+<div class="event-details-container">
+    @if (_event != null)
+    {
+        <button class="btn-back" @onclick="GoBack">← Back</button>
+
+        <h1>@_event.Name</h1>
+
+        <div class="event-info">
+            <p><strong>Date:</strong> @_event.Date.ToString("MMM dd, yyyy")</p>
+            <p><strong>Location:</strong> @_event.Location</p>
+            <p><strong>Capacity:</strong> @_event.RegisteredCount / @_event.Capacity</p>
+            <p>@_event.Description</p>
+        </div>
+
+        <div class="action-section">
+            @if (!_event.IsFull)
+            {
+                <button class="btn btn-primary" @onclick="RegisterForEvent">
+                    Register
+                </button>
+            }
+
+            <button class="btn btn-secondary" @onclick="ViewAttendance">
+                View Attendance
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? _event;
+
+    protected override void OnParametersSet()
+    {
+        _event = EventService.GetEventById(EventId);
+    }
+
+    private void RegisterForEvent()
+    {
+        Navigation.NavigateTo($"/register/{EventId}");
+    }
+
+    private void ViewAttendance()
+    {
+        Navigation.NavigateTo($"/attendance/{EventId}");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

@@ -1,0 +1,49 @@
+@page "/register/{EventId:int}"
+@using EventEase.Models
+@using EventEase.Services
+@using EventEase.Components
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Register</PageTitle>
+
+<div class="register-container">
+    @if (_event != null && !_event.IsFull)
+    {
+        <RegistrationForm EventId="@EventId" 
+                        EventName="@_event.Name"
+                        OnRegistrationComplete="@HandleRegistrationComplete" />
+    }
+    else
+    {
+        <div class="full-event-message">
+            <h2>Event Full</h2>
+            <p>This event has reached maximum capacity.</p>
+            <button class="btn btn-primary" @onclick="GoHome">
+                Return to Events
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? _event;
+
+    protected override void OnParametersSet()
+    {
+        _event = EventService.GetEventById(EventId);
+    }
+
+    private void HandleRegistrationComplete()
+    {
+        Navigation.NavigateTo($"/event/{EventId}");
+    }
+
+    private void GoHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
