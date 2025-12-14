@@ -100,19 +100,9 @@ EventEase/
 └── Program.cs                 # App configuration
 ```
 
-## Grading Rubric (30 Points)
-
-| Requirement | Points | Status |
-|-------------|--------|--------|
-| GitHub Repository | 5 | ✅ Complete |
-| Event Card with Two-Way Binding | 5 | ✅ Complete |
-| Routing Functionality | 5 | ✅ Complete |
-| Performance Optimization | 5 | ✅ Complete |
-| Advanced Features | 5 | ✅ Complete |
-| Copilot Summary | 5 | ✅ Complete |
 
 ## License
 This project is created for educational purposes as part of a Coursera course.
 
 ## Contact
-Project Link: https://github.com/[your-username]/EventEase
+Project Link: https://github.com/invalid-mate/EventEase
